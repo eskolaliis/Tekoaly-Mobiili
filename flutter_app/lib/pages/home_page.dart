@@ -1,5 +1,8 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'tabs/home_tab.dart';
+import 'tabs/favorites_tab.dart';
 
 void main() {
   runApp(RuokaApp());
@@ -21,13 +24,53 @@ class RuokaHomePage extends StatefulWidget {
 }
 
 class _RuokaHomePageState extends State<RuokaHomePage> {
-  int _selectedIndex = 0;
+  List<Map<String, dynamic>> _favorites = [];
 
-  final List<Widget> _pages = <Widget>[
-    HomeTab(),
-    Center(child: Text('Suosikit – Tallennetut reseptit')),
-    Center(child: Text('Asetukset / Tietoa')),
-  ];
+  @override
+  void initState() {
+    super.initState();
+    _loadFavorites();
+  }
+
+  List<Widget> _buildPages() {
+    return [
+      HomeTab(
+        favorites: _favorites,
+        onAddFavorite: _toggleFavorite,
+      ),
+      FavoritesTab(favorites: _favorites),
+      Center(child: Text('Asetukset / Tietoa')),
+    ];
+  }
+
+  void _loadFavorites() async {
+    final prefs = await SharedPreferences.getInstance();
+    final String? stored = prefs.getString('favorites');
+    if (stored != null) {
+      final List<dynamic> decoded = jsonDecode(stored);
+      setState(() {
+        _favorites = decoded.cast<Map<String, dynamic>>();
+      });
+    }
+  }
+
+  void _saveFavorites() async {
+    final prefs = await SharedPreferences.getInstance();
+    final encoded = jsonEncode(_favorites);
+    await prefs.setString('favorites', encoded);
+  }
+
+  void _toggleFavorite(Map<String, dynamic> recipe) {
+    setState(() {
+      final exists = _favorites.any((r) => r['name'] == recipe['name']);
+      if (exists) {
+        _favorites.removeWhere((r) => r['name'] == recipe['name']);
+      } else {
+        _favorites.add(recipe);
+      }
+      _saveFavorites();
+    });
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -35,11 +78,13 @@ class _RuokaHomePageState extends State<RuokaHomePage> {
     });
   }
 
+  int _selectedIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Ruokainspiraattori')),
-      body: _pages[_selectedIndex],
+      body: _buildPages()[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,

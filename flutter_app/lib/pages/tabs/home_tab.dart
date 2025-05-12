@@ -4,6 +4,11 @@ import 'dart:convert';
 import '../../widgets/ingredient_list.dart';
 
 class HomeTab extends StatefulWidget {
+  final List<Map<String, dynamic>> favorites;
+  final void Function(Map<String, dynamic>) onAddFavorite;
+
+  const HomeTab({Key? key, required this.favorites, required this.onAddFavorite}) : super(key: key);
+
   @override
   _HomeTabState createState() => _HomeTabState();
 }
@@ -100,6 +105,8 @@ class _HomeTabState extends State<HomeTab> {
               itemCount: _suggestions.length,
               itemBuilder: (context, index) {
                 final recipe = _suggestions[index];
+                final isFavorite = widget.favorites.any((fav) => fav['name'] == recipe['name']);
+
                 return Card(
                   margin: EdgeInsets.symmetric(vertical: 8),
                   child: Padding(
@@ -107,7 +114,30 @@ class _HomeTabState extends State<HomeTab> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(recipe['name'], style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(recipe['name'], style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                            IconButton(
+                              icon: Icon(
+                                isFavorite ? Icons.favorite : Icons.favorite_border,
+                                color: isFavorite ? Colors.red : null,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  if (isFavorite) {
+                                    widget.onAddFavorite({
+                                      ...recipe,
+                                      'remove': true,
+                                    });
+                                  } else {
+                                    widget.onAddFavorite(recipe);
+                                  }
+                                });
+                              },
+                            ),
+                          ],
+                        ),
                         SizedBox(height: 8),
                         Text('Ainekset: ${recipe['ingredients'].join(', ')}'),
                         SizedBox(height: 4),
