@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import '../../widgets/ingredient_list.dart';
-import '../../widgets/suggestion_list.dart';
 
 class HomeTab extends StatefulWidget {
   @override
@@ -10,7 +11,7 @@ class HomeTab extends StatefulWidget {
 class _HomeTabState extends State<HomeTab> {
   final List<String> _ingredients = [];
   final TextEditingController _controller = TextEditingController();
-  List<String> _suggestions = [];
+  List<Map<String, dynamic>> _suggestions = [];
 
   void _addIngredient() {
     final input = _controller.text.trim();
@@ -22,15 +23,44 @@ class _HomeTabState extends State<HomeTab> {
     }
   }
 
-  void _getSuggestions() {
-    // Tämä on mockup. Korvataan backend-kutsulla myöhemmin.
-    setState(() {
-      _suggestions = [
-        "Pikapasta munalla ja juustolla",
-        "Kasviswokki riisillä",
-        "Paistettu leipäjuusto ja salaatti"
-      ];
-    });
+  Future<void> _getSuggestions() async {
+    final url = Uri.parse('http://127.0.0.1:5000/generate');
+    try {
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'ingredients': _ingredients}),
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final List recipes = data['recipes'];
+
+        setState(() {
+          _suggestions = recipes.cast<Map<String, dynamic>>();
+        });
+      } else {
+        setState(() {
+          _suggestions = [
+            {
+              'name': 'Virhe',
+              'ingredients': [],
+              'instructions': ['Virhe haettaessa reseptiä.']
+            }
+          ];
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _suggestions = [
+          {
+            'name': 'Yhteysvirhe',
+            'ingredients': [],
+            'instructions': ['Yhteys epäonnistui: $e']
+          }
+        ];
+      });
+    }
   }
 
   @override
@@ -66,7 +96,28 @@ class _HomeTabState extends State<HomeTab> {
           ),
           SizedBox(height: 20),
           Expanded(
-            child: SuggestionList(suggestions: _suggestions),
+            child: ListView.builder(
+              itemCount: _suggestions.length,
+              itemBuilder: (context, index) {
+                final recipe = _suggestions[index];
+                return Card(
+                  margin: EdgeInsets.symmetric(vertical: 8),
+                  child: Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(recipe['name'], style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                        SizedBox(height: 8),
+                        Text('Ainekset: ${recipe['ingredients'].join(', ')}'),
+                        SizedBox(height: 4),
+                        Text('Ohjeet:\n${(recipe['instructions'] as List).join('\n')}'),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
           )
         ],
       ),
