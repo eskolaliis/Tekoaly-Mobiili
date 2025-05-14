@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'tabs/home_tab.dart';
 import 'tabs/favorites_tab.dart';
+import 'tabs/settings_tab.dart';
 
 void main() {
   runApp(RuokaApp());
@@ -38,8 +39,13 @@ class _RuokaHomePageState extends State<RuokaHomePage> {
         favorites: _favorites,
         onAddFavorite: _toggleFavorite,
       ),
-      FavoritesTab(favorites: _favorites),
-      Center(child: Text('Asetukset / Tietoa')),
+      FavoritesTab(
+        favorites: _favorites,
+        onToggleFavorite: _toggleFavorite,
+      ),
+      SettingsTab(
+        onClearFavorites: _clearFavorites,
+      ),
     ];
   }
 
@@ -68,6 +74,13 @@ class _RuokaHomePageState extends State<RuokaHomePage> {
       } else {
         _favorites.add(recipe);
       }
+      _saveFavorites();
+    });
+  }
+
+  void _clearFavorites() {
+    setState(() {
+      _favorites.clear();
       _saveFavorites();
     });
   }
