@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 
 class FavoritesTab extends StatefulWidget {
   final List<Map<String, dynamic>> favorites;
@@ -12,6 +16,39 @@ class FavoritesTab extends StatefulWidget {
 
 class _FavoritesTabState extends State<FavoritesTab> {
   String sortOption = 'Nimi';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadImages();
+  }
+
+  void _loadImages() async {
+    final prefs = await SharedPreferences.getInstance();
+    final stored = prefs.getString('favoriteImages');
+    if (stored != null) {
+      final Map<String, String> paths = Map<String, String>.from(jsonDecode(stored));
+      setState(() {
+        for (var recipe in widget.favorites) {
+          final path = paths[recipe['name']];
+          if (path != null) {
+            recipe['imagePath'] = path;
+          }
+        }
+      });
+    }
+  }
+
+  Future<void> _saveImages() async {
+    final prefs = await SharedPreferences.getInstance();
+    final paths = <String, String>{};
+    for (var recipe in widget.favorites) {
+      if (recipe['imagePath'] != null) {
+        paths[recipe['name']] = recipe['imagePath'];
+      }
+    }
+    await prefs.setString('favoriteImages', jsonEncode(paths));
+  }
 
   Widget _buildSortDropdown(void Function(String?) onChanged) {
     return Padding(
@@ -101,28 +138,95 @@ class _FavoritesTabState extends State<FavoritesTab> {
                       ),
                     );
                   },
-                  child: Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (recipe['imagePath'] != null)
+                        ClipRRect(
+                          borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+                          child: Image.file(
+                            File(recipe['imagePath']),
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                            height: 160,
+                          ),
+                        ),
+                      Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(recipe['name'], style: Theme.of(context).textTheme.titleMedium),
-                            IconButton(
-                              icon: Icon(Icons.favorite, color: Colors.red),
-                              tooltip: 'Poista suosikeista',
-                              onPressed: () => widget.onToggleFavorite(recipe),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(recipe['name'], style: Theme.of(context).textTheme.titleMedium),
+                                IconButton(
+                                  icon: Icon(Icons.favorite, color: Colors.red),
+                                  tooltip: 'Poista suosikeista',
+                                  onPressed: () => widget.onToggleFavorite(recipe),
+                                ),
+                              ],
                             ),
+                            SizedBox(height: 8),
+                            Text('Ainekset: ${recipe['ingredients'].join(', ')}', style: Theme.of(context).textTheme.bodyMedium),
+                            SizedBox(height: 4),
+                            Text('Ohjeet:\n${(recipe['instructions'] as List).join('\n')}', style: Theme.of(context).textTheme.bodySmall),
+                            SizedBox(height: 8),
+                            if (recipe['imagePath'] == null)
+                              ElevatedButton.icon(
+                                onPressed: () async {
+                                  final picker = ImagePicker();
+                                  final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+                                  if (pickedFile != null) {
+                                    final path = pickedFile.path;
+                                    setState(() {
+                                      recipe['imagePath'] = path;
+                                    });
+                                    await _saveImages();
+                                  }
+                                },
+                                icon: Icon(Icons.add_a_photo),
+                                label: Text('Lisää kuva'),
+                              )
+                            else
+                              Row(
+                                children: [
+                                  ElevatedButton.icon(
+                                    onPressed: () async {
+                                      final picker = ImagePicker();
+                                      final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+                                      if (pickedFile != null) {
+                                        final path = pickedFile.path;
+                                        setState(() {
+                                          recipe['imagePath'] = path;
+                                        });
+                                        await _saveImages();
+                                      }
+                                    },
+                                    icon: Icon(Icons.image),
+                                    label: Text('Vaihda kuva'),
+                                  ),
+                                  SizedBox(width: 12),
+                                  ElevatedButton.icon(
+                                    onPressed: () async {
+                                      setState(() {
+                                        recipe['imagePath'] = null;
+                                      });
+                                      await _saveImages();
+                                    },
+                                    icon: Icon(Icons.delete),
+                                    label: Text('Poista kuva'),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.red,
+                                      foregroundColor: Colors.white,
+                                    ),
+                                  ),
+                                ],
+                              ),
                           ],
                         ),
-                        SizedBox(height: 8),
-                        Text('Ainekset: ${recipe['ingredients'].join(', ')}', style: Theme.of(context).textTheme.bodyMedium),
-                        SizedBox(height: 4),
-                        Text('Ohjeet:\n${(recipe['instructions'] as List).join('\n')}', style: Theme.of(context).textTheme.bodySmall),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               );
