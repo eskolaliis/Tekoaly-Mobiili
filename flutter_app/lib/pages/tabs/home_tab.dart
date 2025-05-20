@@ -117,7 +117,10 @@ class _HomeTabState extends State<HomeTab> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(recipe['name'], style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                            Text(
+                              recipe['name'],
+                              style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                            ),
                             IconButton(
                               icon: Icon(
                                 isFavorite ? Icons.favorite : Icons.favorite_border,

@@ -17,12 +17,12 @@ class FavoritesTab extends StatelessWidget {
             SizedBox(height: 16),
             Text(
               'Ei vielä suosikkeja',
-              style: TextStyle(fontSize: 18, color: Colors.grey),
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 18),
             ),
             SizedBox(height: 8),
             Text(
               'Tallenna reseptejä etusivulta ❤',
-              style: TextStyle(fontSize: 14, color: Colors.grey),
+              style: Theme.of(context).textTheme.bodySmall,
             ),
           ],
         ),
