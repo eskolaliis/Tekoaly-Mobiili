@@ -70,11 +70,11 @@ class _HomeTabState extends State<HomeTab> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        children: [
-          TextField(
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: TextField(
             controller: _controller,
             decoration: InputDecoration(
               labelText: 'Lisää ainesosa',
@@ -85,8 +85,11 @@ class _HomeTabState extends State<HomeTab> {
             ),
             onSubmitted: (_) => _addIngredient(),
           ),
-          SizedBox(height: 10),
-          IngredientList(
+        ),
+        SizedBox(height: 10),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: IngredientList(
             ingredients: _ingredients,
             onRemove: (ingredient) {
               setState(() {
@@ -94,90 +97,114 @@ class _HomeTabState extends State<HomeTab> {
               });
             },
           ),
-          SizedBox(height: 20),
-          ElevatedButton(
+        ),
+        SizedBox(height: 20),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: ElevatedButton(
             onPressed: _getSuggestions,
             child: Text('Ehdota reseptejä'),
           ),
-          SizedBox(height: 20),
-          Expanded(
-            child: ListView.builder(
-              itemCount: _suggestions.length,
-              itemBuilder: (context, index) {
-                final recipe = _suggestions[index];
-                if (recipe['name'] == 'Virhe' || recipe['name'] == 'Yhteysvirhe') {
-                  return Card(
-                    margin: EdgeInsets.symmetric(vertical: 8),
-                    elevation: 1,
-                    child: Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            recipe['name'],
-                            style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.red),
-                          ),
-                          SizedBox(height: 8),
-                          Text('Ainekset:', style: Theme.of(context).textTheme.bodyMedium),
-                          Text(''),
-                          SizedBox(height: 4),
-                          Text('Ohjeet:', style: Theme.of(context).textTheme.bodyMedium),
-                          Text((recipe['instructions'] as List).join('\n'), style: Theme.of(context).textTheme.bodySmall),
-                        ],
-                      ),
-                    ),
-                  );
-                }
-                final isFavorite = widget.favorites.any((fav) => fav['name'] == recipe['name']);
-
+        ),
+        SizedBox(height: 20),
+        Expanded(
+          child: ListView.builder(
+            itemCount: _suggestions.length,
+            itemBuilder: (context, index) {
+              final recipe = _suggestions[index];
+              if (recipe['name'] == 'Virhe' || recipe['name'] == 'Yhteysvirhe') {
                 return Card(
-                  margin: EdgeInsets.symmetric(vertical: 8),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  elevation: 3,
+                  margin: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
                   child: Padding(
                     padding: const EdgeInsets.all(12.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              recipe['name'],
-                              style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
-                            ),
-                            IconButton(
-                              icon: Icon(
-                                isFavorite ? Icons.favorite : Icons.favorite_border,
-                                color: isFavorite ? Colors.red : null,
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  if (isFavorite) {
-                                    widget.onAddFavorite({
-                                      ...recipe,
-                                      'remove': true,
-                                    });
-                                  } else {
-                                    widget.onAddFavorite(recipe);
-                                  }
-                                });
-                              },
-                            ),
-                          ],
+                        Text(
+                          recipe['name'],
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.red),
                         ),
                         SizedBox(height: 8),
-                        Text('Ainekset: ${recipe['ingredients'].join(', ')}'),
+                        Text('Ainekset:', style: Theme.of(context).textTheme.titleSmall),
+                        Text(''),
                         SizedBox(height: 4),
-                        Text('Ohjeet:\n${(recipe['instructions'] as List).join('\n')}'),
+                        Text('Ohjeet:', style: Theme.of(context).textTheme.titleSmall),
+                        Text((recipe['instructions'] as List).join('\n'), style: Theme.of(context).textTheme.bodySmall),
                       ],
                     ),
                   ),
                 );
-              },
-            ),
-          )
-        ],
-      ),
+              }
+              final isFavorite = widget.favorites.any((fav) => fav['name'] == recipe['name']);
+
+              return Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                elevation: 3,
+                margin: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            recipe['name'],
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                          IconButton(
+                            icon: Icon(
+                              isFavorite ? Icons.favorite : Icons.favorite_border,
+                              color: isFavorite ? Colors.red : null,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                if (isFavorite) {
+                                  widget.onAddFavorite({
+                                    ...recipe,
+                                    'remove': true,
+                                  });
+                                } else {
+                                  widget.onAddFavorite(recipe);
+                                }
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        'Ainekset:',
+                        style: Theme.of(context).textTheme.titleSmall,
+                      ),
+                      Text(
+                        recipe['ingredients'].join(', '),
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        'Ohjeet:',
+                        style: Theme.of(context).textTheme.titleSmall,
+                      ),
+                      Text(
+                        (recipe['instructions'] as List).join('\n'),
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+        )
+      ],
     );
   }
 }
