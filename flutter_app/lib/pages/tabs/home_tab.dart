@@ -29,6 +29,13 @@ class _HomeTabState extends State<HomeTab> {
   }
 
   Future<void> _getSuggestions() async {
+    if (_ingredients.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Lisää vähintään yksi ainesosa')),
+      );
+      return;
+    }
+
     final url = Uri.parse('http://127.0.0.1:5000/generate');
     try {
       final response = await http.post(

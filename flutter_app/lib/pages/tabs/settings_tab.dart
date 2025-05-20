@@ -109,7 +109,7 @@ class SettingsTab extends StatelessWidget {
               showDialog(
                 context: context,
                 builder: (context) => AlertDialog(
-                  title: Text('Ruokainspiraattori'),
+                  title: Text('Ruokavinkki'),
                   content: Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,

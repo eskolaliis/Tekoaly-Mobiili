@@ -38,7 +38,7 @@ class _RuokaAppState extends State<RuokaApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Ruokainspiraattori',
+      title: 'Ruokavinkki',
       theme: ThemeData.light(),
       darkTheme: ThemeData.dark(),
       themeMode: _isDarkMode ? ThemeMode.dark : ThemeMode.light,

@@ -41,7 +41,7 @@ class _RuokaAppState extends State<RuokaApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Ruokainspiraattori',
+      title: 'Ruokavinkki',
       theme: _isDarkMode ? ThemeData.dark() : ThemeData.light(),
       home: RuokaHomePage(
         isDarkMode: _isDarkMode,
@@ -140,7 +140,7 @@ class _RuokaHomePageState extends State<RuokaHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Ruokainspiraattori')),
+      appBar: AppBar(title: Text('Ruokavinkki')),
       body: _buildPages()[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
