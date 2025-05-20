@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// Tämä widget näyttää listan ehdotetuista resepteistä
 class SuggestionList extends StatelessWidget {
   final List<String> suggestions;
 
@@ -10,6 +11,7 @@ class SuggestionList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Jos ei ole yhtään ehdotusta, näytetään viesti
     if (suggestions.isEmpty) {
       return Center(
         child: Text(
@@ -19,9 +21,11 @@ class SuggestionList extends StatelessWidget {
       );
     }
 
+    // Muuten näytetään kaikki ehdotukset listana
     return ListView.builder(
       itemCount: suggestions.length,
       itemBuilder: (context, index) {
+        // Yksi rivi: kuvake ja ehdotuksen nimi
         return ListTile(
           leading: Icon(Icons.restaurant_menu),
           title: Text(suggestions[index]),

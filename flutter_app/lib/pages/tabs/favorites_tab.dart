@@ -4,6 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
+// Tämä välilehti näyttää käyttäjän tallentamat suosikkireseptit
 class FavoritesTab extends StatefulWidget {
   final List<Map<String, dynamic>> favorites;
   final void Function(Map<String, dynamic>) onToggleFavorite;
@@ -18,6 +19,7 @@ class _FavoritesTabState extends State<FavoritesTab> {
   String sortOption = 'Nimi';
 
   @override
+  // Ladataan suosikkeihin tallennetut kuvat kun näkymä avautuu
   void initState() {
     super.initState();
     _loadImages();
@@ -39,6 +41,7 @@ class _FavoritesTabState extends State<FavoritesTab> {
     }
   }
 
+  // Tallennetaan jokaisen reseptin kuva SharedPreferencesiin
   Future<void> _saveImages() async {
     final prefs = await SharedPreferences.getInstance();
     final paths = <String, String>{};
@@ -50,6 +53,7 @@ class _FavoritesTabState extends State<FavoritesTab> {
     await prefs.setString('favoriteImages', jsonEncode(paths));
   }
 
+  // Putoavalikko suosikkien järjestämiseen nimen tai ainesosien määrän mukaan
   Widget _buildSortDropdown(void Function(String?) onChanged) {
     return Padding(
       padding: const EdgeInsets.all(12.0),
@@ -65,6 +69,7 @@ class _FavoritesTabState extends State<FavoritesTab> {
 
   @override
   Widget build(BuildContext context) {
+    // Järjestetään suosikit valitun vaihtoehdon mukaan
     List<Map<String, dynamic>> sortedFavorites = List.from(widget.favorites);
     if (sortOption == 'Nimi') {
       sortedFavorites.sort((a, b) => (a['name'] as String).compareTo(b['name'] as String));
@@ -72,6 +77,7 @@ class _FavoritesTabState extends State<FavoritesTab> {
       sortedFavorites.sort((a, b) => (a['ingredients'] as List).length.compareTo((b['ingredients'] as List).length));
     }
 
+    // Jos ei ole yhtään suosikkia, näytetään tyhjätila
     if (sortedFavorites.isEmpty) {
       return Center(
         child: Column(
@@ -107,11 +113,14 @@ class _FavoritesTabState extends State<FavoritesTab> {
             itemCount: sortedFavorites.length,
             itemBuilder: (context, index) {
               final recipe = sortedFavorites[index];
+              // Näytetään jokainen suosikki reseptikorttina
               return Card(
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 elevation: 3,
                 margin: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-                child: InkWell(
+                child: 
+                  // Klikkaamalla korttia saa näkyviin reseptin tarkemmat tiedot
+                  InkWell(
                   onTap: () {
                     showDialog(
                       context: context,
@@ -141,6 +150,7 @@ class _FavoritesTabState extends State<FavoritesTab> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      // Jos reseptille on lisätty kuva, näytetään se kortin yläosassa
                       if (recipe['imagePath'] != null)
                         ClipRRect(
                           borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
@@ -172,6 +182,7 @@ class _FavoritesTabState extends State<FavoritesTab> {
                             SizedBox(height: 4),
                             Text('Ohjeet:\n${(recipe['instructions'] as List).join('\n')}', style: Theme.of(context).textTheme.bodySmall),
                             SizedBox(height: 8),
+                            // Nappi kuvan lisäämiseen, vaihtamiseen tai poistamiseen
                             if (recipe['imagePath'] == null)
                               ElevatedButton.icon(
                                 onPressed: () async {

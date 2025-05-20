@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../../widgets/ingredient_list.dart';
 
+// Etusivu-välilehti syöttää ainesosia ja saa reseptiehdotuksia
 class HomeTab extends StatefulWidget {
   final List<Map<String, dynamic>> favorites;
   final void Function(Map<String, dynamic>) onAddFavorite;
@@ -18,6 +19,7 @@ class _HomeTabState extends State<HomeTab> {
   final TextEditingController _controller = TextEditingController();
   List<Map<String, dynamic>> _suggestions = [];
 
+  // Lisää uusi ainesosa listaan ja tyhjentää kentän
   void _addIngredient() {
     final input = _controller.text.trim();
     if (input.isNotEmpty) {
@@ -28,7 +30,9 @@ class _HomeTabState extends State<HomeTab> {
     }
   }
 
+  // Lähettää ainesosat backendille ja hakee reseptiehdotuksia
   Future<void> _getSuggestions() async {
+    // Jos ei ole yhtään ainesosaa, näytetään varoitus
     if (_ingredients.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Lisää vähintään yksi ainesosa')),
@@ -114,6 +118,7 @@ class _HomeTabState extends State<HomeTab> {
           ),
         ),
         SizedBox(height: 20),
+        // Näyttää reseptiehdotukset kortteina
         Expanded(
           child: ListView.builder(
             itemCount: _suggestions.length,
@@ -146,6 +151,7 @@ class _HomeTabState extends State<HomeTab> {
                   ),
                 );
               }
+              // Tarkistaa onko resepti jo suosikeissa
               final isFavorite = widget.favorites.any((fav) => fav['name'] == recipe['name']);
 
               return Card(
@@ -166,6 +172,7 @@ class _HomeTabState extends State<HomeTab> {
                             recipe['name'],
                             style: Theme.of(context).textTheme.titleMedium,
                           ),
+                          // Lisää tai poistaa reseptin suosikeista
                           IconButton(
                             icon: Icon(
                               isFavorite ? Icons.favorite : Icons.favorite_border,

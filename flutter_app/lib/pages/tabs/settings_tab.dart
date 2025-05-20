@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-
+// Asetukset-välilehti käyttäjä voi säätää teeman, tyhjentää suosikit ja lukea ohjeita
 class SettingsTab extends StatelessWidget {
   final VoidCallback onClearFavorites;
   final bool isDarkMode;
@@ -17,6 +17,7 @@ class SettingsTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Näyttää käyttöohjeet popup-ikkunassa
     void _showHelpDialog(BuildContext context) {
       showDialog(
         context: context,
@@ -44,12 +45,14 @@ class SettingsTab extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(height: 24),
+          // Tumma/vaalea tila -kytkin
           SwitchListTile(
             title: Text('Tumma tila'),
             value: isDarkMode,
             onChanged: onThemeChanged,
           ),
           SizedBox(height: 12),
+          // Nappi, josta avautuu ohjeet sovelluksen käyttöön
           ElevatedButton.icon(
             onPressed: () => _showHelpDialog(context),
             icon: Icon(Icons.help_outline),
@@ -61,6 +64,7 @@ class SettingsTab extends StatelessWidget {
             ),
           ),
           SizedBox(height: 12),
+          // Nappi, jolla voi tyhjentää kaikki suosikit, kysyy varmistuksen
           ElevatedButton.icon(
             onPressed: () {
               showDialog(
@@ -104,6 +108,7 @@ class SettingsTab extends StatelessWidget {
             ),
           ),
           SizedBox(height: 12),
+          // Nappi, joka näyttää perustiedot sovelluksesta
           ElevatedButton.icon(
             onPressed: () {
               showDialog(
@@ -137,6 +142,7 @@ class SettingsTab extends StatelessWidget {
             ),
           ),
           SizedBox(height: 32),
+          // Versiotieto näkyy alareunassa
           Center(
             child: Text(
               'Versio 1.0',

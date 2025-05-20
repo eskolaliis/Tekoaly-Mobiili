@@ -5,6 +5,7 @@ import 'tabs/home_tab.dart';
 import 'tabs/favorites_tab.dart';
 import 'tabs/settings_tab.dart';
 
+// Sovellus käynnistyy
 void main() {
   runApp(RuokaApp());
 }
@@ -17,12 +18,14 @@ class RuokaApp extends StatefulWidget {
 class _RuokaAppState extends State<RuokaApp> {
   bool _isDarkMode = false;
 
+  // Haetaan tallennettu teema-asetus kun sovellus käynnistyy
   @override
   void initState() {
     super.initState();
     _loadTheme();
   }
 
+  // Haetaan tallennettu teema-asetus kun sovellus käynnistyy
   void _loadTheme() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -30,6 +33,7 @@ class _RuokaAppState extends State<RuokaApp> {
     });
   }
 
+  // Tallennetaan uusi teema-asetus (tumma tai vaalea)
   void _toggleTheme(bool value) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('darkMode', value);
@@ -51,6 +55,7 @@ class _RuokaAppState extends State<RuokaApp> {
   }
 }
 
+// Tämä luokka sisältää välilehdet: Etusivu, Suosikit ja Asetukset
 class RuokaHomePage extends StatefulWidget {
   final bool isDarkMode;
   final ValueChanged<bool> onToggleTheme;
@@ -74,6 +79,7 @@ class _RuokaHomePageState extends State<RuokaHomePage> {
     _loadFavorites();
   }
 
+  // Määritellään mitä jokainen välilehti näyttää
   List<Widget> _buildPages() {
     return [
       HomeTab(
@@ -110,6 +116,7 @@ class _RuokaHomePageState extends State<RuokaHomePage> {
     await prefs.setString('favorites', encoded);
   }
 
+  // Lisätään tai poistetaan resepti suosikeista
   void _toggleFavorite(Map<String, dynamic> recipe) {
     setState(() {
       final exists = _favorites.any((r) => r['name'] == recipe['name']);
@@ -122,6 +129,7 @@ class _RuokaHomePageState extends State<RuokaHomePage> {
     });
   }
 
+  // Tyhjennetään kaikki suosikit
   void _clearFavorites() {
     setState(() {
       _favorites.clear();
@@ -129,6 +137,7 @@ class _RuokaHomePageState extends State<RuokaHomePage> {
     });
   }
 
+  // Vaihdetaan välilehti kun alavalikkoa painetaan
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -137,6 +146,7 @@ class _RuokaHomePageState extends State<RuokaHomePage> {
 
   int _selectedIndex = 0;
 
+  // Sovelluksen yläpalkki, runko ja alavalikko
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -1,7 +1,6 @@
-
-
 import 'package:flutter/material.dart';
 
+// Tämä on tekstikenttä, johon käyttäjä voi kirjoittaa uuden ainesosan
 class IngredientInput extends StatelessWidget {
   final TextEditingController controller;
   final VoidCallback onAdd;
@@ -14,6 +13,7 @@ class IngredientInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Tekstikenttä, jossa on lisäyspainike oikeassa reunassa
     return TextField(
       controller: controller,
       decoration: InputDecoration(
@@ -23,6 +23,7 @@ class IngredientInput extends StatelessWidget {
           onPressed: onAdd,
         ),
       ),
+      // Kun käyttäjä painaa enteriä, lisätään ainesosa
       onSubmitted: (_) => onAdd(),
     );
   }
