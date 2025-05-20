@@ -72,20 +72,26 @@ class SettingsTab extends StatelessWidget {
                         ? 'Haluatko varmasti poistaa kaikki suosikit?'
                         : 'Ei suosikkeja poistettavaksi.',
                   ),
-                  actions: [
-                    if (hasFavorites)
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          onClearFavorites();
-                        },
-                        child: Text('Kyllä'),
-                      ),
-                    TextButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      child: Text('OK'),
-                    ),
-                  ],
+                  actions: hasFavorites
+                      ? [
+                          TextButton(
+                            onPressed: () => Navigator.of(context).pop(),
+                            child: Text('Ei'),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                              onClearFavorites();
+                            },
+                            child: Text('Kyllä'),
+                          ),
+                        ]
+                      : [
+                          TextButton(
+                            onPressed: () => Navigator.of(context).pop(),
+                            child: Text('OK'),
+                          ),
+                        ],
                 ),
               );
             },
