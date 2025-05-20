@@ -105,6 +105,30 @@ class _HomeTabState extends State<HomeTab> {
               itemCount: _suggestions.length,
               itemBuilder: (context, index) {
                 final recipe = _suggestions[index];
+                if (recipe['name'] == 'Virhe' || recipe['name'] == 'Yhteysvirhe') {
+                  return Card(
+                    margin: EdgeInsets.symmetric(vertical: 8),
+                    elevation: 1,
+                    child: Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            recipe['name'],
+                            style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.red),
+                          ),
+                          SizedBox(height: 8),
+                          Text('Ainekset:', style: Theme.of(context).textTheme.bodyMedium),
+                          Text(''),
+                          SizedBox(height: 4),
+                          Text('Ohjeet:', style: Theme.of(context).textTheme.bodyMedium),
+                          Text((recipe['instructions'] as List).join('\n'), style: Theme.of(context).textTheme.bodySmall),
+                        ],
+                      ),
+                    ),
+                  );
+                }
                 final isFavorite = widget.favorites.any((fav) => fav['name'] == recipe['name']);
 
                 return Card(
