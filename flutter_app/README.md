@@ -1,16 +1,50 @@
-# flutter_app
+# Ruokavinkki
 
-A new Flutter project.
+Tämä on Flutterilla toteutettu mobiilisovellus, joka auttaa käyttäjää keksimään reseptejä sen perusteella, mitä ainesosia kaapista löytyy.
 
-## Getting Started
+---
 
-This project is a starting point for a Flutter application.
+## Projektin tavoite
 
-A few resources to get you started if this is your first Flutter project:
+Sovelluksen tarkoitus on:
+- Tarjota käyttäjälle ruokareseptejä yksinkertaisilla syötteillä
+- Mahdollistaa reseptien tallentaminen suosikeiksi
+- Antaa mahdollisuus lisätä kuva omasta toteutuksesta
+- Toimia täysin ilman ulkoista tekoälyrajapintaa (offline-logiikalla)
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+---
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Ominaisuudet
+
+- Ainesosien syöttö ja muokkaus
+- Reseptiehdotusten generointi paikallisesti
+- Suosikkireseptien tallennus ja järjestäminen
+- Kuvan lisääminen suosikeille
+- Tumma / vaalea tila (teema-asetus)
+- Splash screen ja oma sovellusikoni
+- Tietojen tallennus SharedPreferences-muistiin
+
+---
+
+## Teknologiat
+
+- Flutter (3.29+)
+- Dart
+- SharedPreferences (paikallinen tallennus)
+- Image Picker (galleria / kamera)
+
+---
+
+## Asennus
+
+1. Varmista, että sinulla on Flutter asennettuna
+2. Kloonaa projekti
+
+
+---
+
+## Tekijä
+
+**Nimi:** Liis Eskola 
+**Kurssi:** Projekti: Tekoäly / Mobiili  
+**Pvm:** 20.05.2025
