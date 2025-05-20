@@ -88,6 +88,7 @@ class _RuokaHomePageState extends State<RuokaHomePage> {
         onClearFavorites: _clearFavorites,
         isDarkMode: widget.isDarkMode,
         onThemeChanged: widget.onToggleTheme,
+        hasFavorites: _favorites.isNotEmpty,
       ),
     ];
   }
