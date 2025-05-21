@@ -63,8 +63,5 @@ flutter run
 
 ---
 
-## Tekijä
-
-**Nimi:** Liis Eskola 
 **Kurssi:** Projekti: Tekoäly / Mobiili  
 **Pvm:** 20.05.2025
