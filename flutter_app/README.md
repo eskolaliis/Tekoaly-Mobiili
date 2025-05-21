@@ -32,13 +32,33 @@ Sovelluksen tarkoitus on:
 - Dart
 - SharedPreferences (paikallinen tallennus)
 - Image Picker (galleria / kamera)
+- Flask (Python, reseptipalvelin)
 
 ---
 
-## Asennus
+## Asennus ja käyttö
 
-1. Varmista, että sinulla on Flutter asennettuna
-2. Kloonaa projekti
+1. Varmista, että sinulla on Flutter (3.29+) ja Python 3 asennettuna.
+2. Kloonaa projekti:
+```bash
+git clone <repo-link>
+```
+
+3. Aja backend:
+```bash
+cd backend
+pip install flask flask-cors
+python3 app.py
+```
+
+4. Aja Flutter-sovellus:
+```bash
+cd flutter_app
+flutter pub get
+flutter run
+```
+
+> Varmista, että backend on päällä ennen kuin painat "Ehdota reseptejä".
 
 
 ---
