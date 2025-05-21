@@ -41,7 +41,7 @@ Sovelluksen tarkoitus on:
 1. Varmista, että sinulla on Flutter (3.29+) ja Python 3 asennettuna.
 2. Kloonaa projekti:
 ```bash
-git clone <repo-link>
+git clone https://github.com/eskolaliis/Tekoaly-Mobiili.git
 ```
 
 3. Aja backend:
